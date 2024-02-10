@@ -5,7 +5,26 @@
 // 5. Check if user won
 // 6. Giver user the money
 // 7. Play again
+
 const prompt = require("prompt-sync")();
+
+// Slot machine
+const ROWS = 3;
+const COLS = 3;
+
+const SYMBOLS_COUNT = {
+  "🍒": 2,
+  "🍊": 4,
+  "🍋": 6,
+  "🍇": 8,
+};
+
+const SYMBOL_VALUES = {
+  "🍒": 5,
+  "🍊": 4,
+  "🍋": 3,
+  "🍇": 2,
+};
 
 const deposit = () => {
   while (true) {
@@ -46,6 +65,32 @@ const getBet = (balance, lines) => {
   }
 };
 
+const spin = () => {
+  const symbols = [];
+  // Adding symbols to the array
+  for (const [symbol, count] of Object.entries(SYMBOLS_COUNT)) {
+    // Adding symbols to the array based on the count
+    for (let i = 0; i < count; i++) {
+      symbols.push(symbol);
+    }
+  }
+
+  const reels = [];
+  // Filling reels with random symbols
+  for (let i = 0; i < COLS; i++) {
+    reels.push([]);
+    const reelSymbols = [...symbols];
+    for (let j = 0; j < ROWS; j++) {
+      const randomIndex = Math.floor(Math.random() * reelSymbols.length);
+      const selectedSymbols = reelSymbols[randomIndex];
+      reels[i].push(selectedSymbols);
+      reelSymbols.splice(randomIndex, 1);
+    }
+  }
+  return reels;
+};
+const reels = spin();
+console.log(reels);
 let balance = deposit();
 const numberOfLines = getNumberOfLines();
 const bet = getBet(balance, numberOfLines);
